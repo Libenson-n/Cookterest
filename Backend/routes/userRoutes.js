@@ -24,8 +24,11 @@ router.route("/favorites/:_id").put(protect, updateFavorites).get(getFavorites);
 router.post("/auth", authUser);
 router.post("/logout", logoutUser);
 
-router.route("/profile").get(getUserProfile).put(protect, updateUserProfile);
+router.get("/profile", getUserProfile);
 
-router.delete("/profile/:_id", protect, deleteUserProfile);
+router
+  .route("/profile/:_id")
+  .delete(protect, deleteUserProfile)
+  .put(protect, updateUserProfile);
 
 export { router as userRouter };

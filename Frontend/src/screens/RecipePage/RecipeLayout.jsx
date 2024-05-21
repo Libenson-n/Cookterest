@@ -19,7 +19,7 @@ const RecipeGrid = styled.section`
   min-height: 100vh;
   display: grid;
   grid-template-columns: auto auto auto;
-  gap: 10px;
+  gap: 1rem;
   margin-inline: 10vw;
   margin-bottom: 60px;
 `;

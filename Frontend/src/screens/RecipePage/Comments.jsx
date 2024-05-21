@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState, useContext } from "react";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
-import { Link } from "react-router-dom";
 import useFetchComments from "../../hooks/useFetchComments";
 
 const Comments = ({ recipe }) => {
@@ -15,9 +14,8 @@ const Comments = ({ recipe }) => {
   const recipeId = recipe?._id;
   const timestamp = new Date().toLocaleDateString();
 
-  const { comments, isLoading } = useFetchComments(recipeId);
+  const { comments, isPending } = useFetchComments(recipeId);
 
-  console.log(comments);
   const handleCommentInput = (event) => {
     setComment(event.target.value);
   };
@@ -58,7 +56,8 @@ const Comments = ({ recipe }) => {
           cols={65}
           rows={4}
           value={comment}
-          placeholder="What did you think of this recipe?"
+          disabled={loggedInUser ? false : true}
+          placeholder={loggedInUser ? "What did you think of this recipe?" : "" }
           onChange={handleCommentInput}
         ></TextInput>
         {loggedInUser ? <button type="submit">Submit</button> : null}
@@ -72,13 +71,13 @@ const Comments = ({ recipe }) => {
             ) : null}
           </>
         )}
-        {!isLoading &&
+        {!isPending &&
           comments?.map((comment, index) => (
             <Comment key={index}>
               <User>
-                <Link className="username" to={`/profile/${comment.userId}`}>
+                <h3>
                   {comment.userName}
-                </Link>
+                </h3>
                 <p>{comment.timestamp}</p>
               </User>
               <p>{comment.comment}</p>
@@ -102,25 +101,8 @@ const ReviewForm = styled.form`
   width: fit-content;
   padding: 20px;
 
-  button {
+  button { 
     margin-inline: auto;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    color: white;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-  }
-  button:hover {
-    border-color: #646cff;
-  }
-  button:focus,
-  button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
   }
 `;
 const TextInput = styled.textarea`
@@ -130,7 +112,7 @@ const TextInput = styled.textarea`
 `;
 
 const CommentsSection = styled.section`
-  margin-top: 50px;
+  margin-block: 50px;
 
   h2 {
     border-bottom: inset 2px rgba(0, 0, 0, 0.3);

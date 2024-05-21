@@ -12,6 +12,7 @@ const CreateRecipePage = () => {
     instructions: [],
     imageURL: "",
   });
+
   const [success, setSuccess] = useState(false);
   const [pending, setPending] = useState(false);
   const [authorized, setAuthorized] = useState(true);
@@ -48,11 +49,12 @@ const CreateRecipePage = () => {
     setRecipe({ ...recipe, ingredients: [...recipe.ingredients, ""] });
   };
   const removeInput = (event, index) => {
-    console.log(event.target.name);
     if (event.target.name === "ingredients") {
       recipe.ingredients.splice(index, 1);
-    } else {
+      setRecipe({ ...recipe })
+    } else if (event.target.name === "instructions") {
       recipe.instructions.splice(index, 1);
+      setRecipe({ ...recipe });
     }
   };
   const addInstructions = () => {
@@ -79,6 +81,7 @@ const CreateRecipePage = () => {
         }),
       });
       const data = await response.json();
+      console.log(data);
       if (data.status !== 200) {
         setAuthorized(false);
         logOut();
@@ -93,7 +96,6 @@ const CreateRecipePage = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(recipe);
     addRecipe();
   };
 
@@ -103,13 +105,13 @@ const CreateRecipePage = () => {
         {authorized ? (
           <RecipeForm onSubmit={onSubmit}>
             <label htmlFor="title">Name of your recipe</label>
-            <input
+            <FormInput
               id="title"
               name="title"
               onChange={(event) => handleInput(event)}
             />
             <label htmlFor="subtitle">Description</label>
-            <input
+            <FormInput
               id="subtitle"
               name="subtitle"
               onChange={(event) => handleInput(event)}
@@ -117,7 +119,7 @@ const CreateRecipePage = () => {
             <label htmlFor="ingredients">Ingredients</label>
             {recipe.ingredients.map((ingredient, index) => (
               <IngredientInput key={`ingredient-${index}`}>
-                <input
+                <FormInput
                   id="ingredients"
                   name="ingredients"
                   value={ingredient}
@@ -143,7 +145,7 @@ const CreateRecipePage = () => {
 
             {recipe.instructions.map((instruction, index) => (
               <InstructionInput key={`instruction-${index}`}>
-                <input
+                <FormInput
                   key={index}
                   id="instructions"
                   name="instructions"
@@ -165,7 +167,7 @@ const CreateRecipePage = () => {
               add instructions
             </button>
             <label htmlFor="image">Image Url</label>
-            <input
+            <FormInput
               id="image"
               name="imageURL"
               onChange={(event) => handleInput(event)}
@@ -173,17 +175,19 @@ const CreateRecipePage = () => {
             <label htmlFor="tags">Tags</label>
             <TagGrid>
               {tags.map((tag) => (
-                <div key={tag}>
+                <Tags key={tag}>
                   <label>{tag}</label>
                   <input
                     type="checkbox"
                     value={tag}
                     onChange={(event) => handleCheckbox(event)}
                   />
-                </div>
+                </Tags>
               ))}
-              <button type="submit">Submit</button>
             </TagGrid>
+            <button type="submit" className="submit">
+              Submit
+            </button>
           </RecipeForm>
         ) : (
           <h1>Please sign in to add your recipe</h1>
@@ -196,21 +200,44 @@ const CreateRecipePage = () => {
 export default CreateRecipePage;
 
 const CreateRecipeMain = styled.main`
-  height: 100vh;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const RecipeForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+  gap: 0.3rem;
   margin-top: 60px;
+
+  .submit {
+    margin: 2rem auto;
+  }
+`;
+
+const FormInput = styled.input`
+  font-size: 1.1rem;
+  padding: 0.3rem;
+  width: 30ch;
+  border-radius: 8px;
+  border: solid 1px rgba(0, 0, 0, 0.3);
 `;
 
 const TagGrid = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: repeat(4, 1fr);
+`;
+
+const Tags = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  border: solid 0.5px rgba(0, 0, 0, 0.1);
+  padding-inline: 0.5rem;
 `;
 
 const IngredientInput = styled.div`

@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useContext } from "react";
 import { LoggedInUserContext } from "../contexts/LoggedInUserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faArrowAltCircleRight,
+} from "@fortawesome/free-regular-svg-icons";
 
 const Header = () => {
   const { logOut, loggedInUser } = useContext(LoggedInUserContext);
@@ -9,7 +14,7 @@ const Header = () => {
   return (
     <NavBar>
       <Link className="logo" to="/">
-        Cookterest
+      Cookstagram
       </Link>
       <Nav>
         {loggedInUser ? (
@@ -17,11 +22,15 @@ const Header = () => {
             <Link to="/recipe/create">Add a recipe</Link>
             <Link to={`/profile/${loggedInUser._id}`}>Profile</Link>
             <Link to="/" onClick={logOut}>
-              Log out
+              Log out <FontAwesomeIcon icon={faArrowAltCircleRight} />
             </Link>
           </>
         ) : (
-          <Link to="/login">Sign in/Sign up</Link>
+          <Link to="/login">
+            <FontAwesomeIcon icon={faUser} />
+            {"  "}
+            Sign in
+          </Link>
         )}
       </Nav>
     </NavBar>
@@ -36,7 +45,7 @@ const NavBar = styled.nav`
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
-  width: 100%;
+  min-width: auto;
   background-color: var(--accent-color);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
@@ -46,6 +55,13 @@ const NavBar = styled.nav`
   .logo {
     margin-left: 20px;
     text-decoration: none;
+    font-family: "Arizonia", cursive;
+    font-size: 2.5rem;
+    font-weight: 900;
+    font-style: normal;
+  }
+  a:visited {
+    color: inherit;
   }
 `;
 
@@ -65,7 +81,7 @@ const Nav = styled.div`
     cursor: pointer;
     transition: border-color 0.25s;
     text-decoration: none;
-    color: dimgray;
+    color: inherit;
     background-color: var(--button-color);
   }
   a:hover {

@@ -16,12 +16,33 @@ const GlobalStyles = createGlobalStyle`
     }
 
     body {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
         font-family: "Reddit Sans Condensed", sans-serif;
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
-        color: dimgray;
-        min-height: 100vh;
+        color: #333333;
+   
+        button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--button-color);
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  button:hover {
+    border-color: #646cff;
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
 }
 `;
 

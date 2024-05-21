@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import Favorites from "../../components/Favorites";
+import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
+import { useContext } from "react";
 
 const RecipeCard = ({ recipe }) => {
   if (!recipe) return <p>Loading...</p>;
+
+  const { loggedInUser } = useContext(LoggedInUserContext);
 
   return (
     <Container>
@@ -13,12 +18,15 @@ const RecipeCard = ({ recipe }) => {
         <Link to={`/recipe/${recipe._id}`} className="recipeName">
           {recipe.title}
         </Link>
-        <Tags>
-          {recipe.tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </Tags>
+        {loggedInUser ? (
+          <Favorites recipe={recipe} userId={loggedInUser._id} />
+        ) : null}
       </Title>
+      <Tags>
+        {recipe.tags.map((tag) => (
+          <Tag key={tag}>{tag}</Tag>
+        ))}
+      </Tags>
     </Container>
   );
 };
@@ -27,21 +35,22 @@ export default RecipeCard;
 
 const Container = styled.div`
   height: 400px;
-  width: 250px;
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   gap: 1rem;
   border-radius: 8px;
-  background: rgb(255, 255, 255);
+  /* background: rgb(255, 255, 255);
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 1) 0%,
     rgba(255, 230, 154, 0.5) 100%
-  );
+  ); */
   border: solid 1px var(--primary-border);
 
   a {
+    color: inherit;
     text-decoration: none;
   }
   a:visited {
@@ -62,10 +71,9 @@ const Image = styled.div`
 
 const Title = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: start;
-  gap: 0.8rem;
-  margin-left: 0.6rem;
+  justify-content: space-between;
+  margin-inline: 0.5rem;
 
   .recipeName {
     font-size: 1.2rem;
@@ -75,14 +83,15 @@ const Title = styled.div`
 
 const Tags = styled.ul`
   display: flex;
-  gap: 1rem;
+  gap: 0.6rem;
   list-style-type: none;
   font-size: 0.7rem;
   font-weight: bold;
+  margin-left: 0.6rem;
 `;
 
 const Tag = styled.li`
   background-color: var(--button-color);
-  padding: 0.3rem;
+  padding: 0.2rem;
   border-radius: 8px;
 `;

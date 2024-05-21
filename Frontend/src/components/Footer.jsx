@@ -11,8 +11,8 @@ const Footer = () => {
 export default Footer;
 
 const FooterSection = styled.footer`
+  display: flex;
   height: 100px;
-  position: relative;
-  bottom: 0;
+  margin-top: auto;
   background-color: var(--accent-color);
 `;

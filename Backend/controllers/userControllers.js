@@ -124,7 +124,7 @@ const getUserProfile = async (req, res) => {
 //  @route    PATCH /api/users/profile
 //  @access   Private
 const updateUserProfile = async (req, res) => {
-  const { _id } = req.body;
+  const { _id } = req.params;
   const query = { _id };
   const newValues = { $set: { ...req.body } };
   try {
@@ -262,10 +262,10 @@ const getFavorites = async (req, res) => {
   try {
     const result = await db.collection(USERS_COLLECTION).findOne({ _id });
     const favorites = await result.favorites;
-    if (favorites.length === 0) {
+    if (!favorites) {
       return res
         .status(404)
-        .json({ status: 404, message: "No Favorites Found!" });
+        .json({ status: 404, message: "Error getting Favorites!" });
     } else {
       return res.status(200).json({ status: 200, favorites });
     }

@@ -58,6 +58,32 @@ const getRecipe = async (req, res) => {
   }
 };
 
+//  @desc       Get recipes from a user
+//  @route      GET /api/recipes/user/:_id
+//  @access     Public
+const getRecipeByUser = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const recipes = await db.collection(RECIPES_COLLECTION).find().toArray();
+
+    if (!recipes) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Recipe not found!" });
+    }
+    const usersRecipes = recipes.filter((recipe) =>
+      recipe.userOwnerId.includes(_id)
+    );
+    res.status(200).json({ status: 200, usersRecipes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: error.message,
+    });
+  }
+};
+
 //  @desc       Add a recipe
 //  @route      POST /api/recipes
 //  @access     Private
@@ -96,4 +122,4 @@ const addRecipe = async (req, res) => {
   }
 };
 
-export { getRecipes, getRecipe, addRecipe };
+export { getRecipes, getRecipe, getRecipeByUser, addRecipe };

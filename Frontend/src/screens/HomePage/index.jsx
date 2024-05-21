@@ -1,23 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import Hero from "./Hero";
 import RecipeLayout from "../RecipePage/RecipeLayout";
+import useFetchRecipes from "../../hooks/useFecthRecipes";
 
 const HomePage = () => {
 
-  const {data, isLoading} = useQuery({
-    queryKey: ["recipes"],
-    queryFn: () => fetch("/api/recipes").then((res) => res.json())
-  })
+  const {recipes, isPending} = useFetchRecipes();
 
-  if (isLoading) return <h1>Loading...</h1>
+  if (isPending) return <h1>Loading...</h1>
   
   return (
-    <main>
+    <HomePageMain>
       <Hero />
-      <RecipeLayout recipes={data.recipes} />
-    </main>
+      <h2>The community recipe book</h2>
+      <RecipeLayout recipes={recipes} />
+    </HomePageMain>
   );
 };
 
 export default HomePage;
+
+const HomePageMain = styled.main`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 2rem;
+
+`

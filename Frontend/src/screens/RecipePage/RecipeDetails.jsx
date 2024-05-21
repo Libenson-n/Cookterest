@@ -1,50 +1,67 @@
-import React, { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import Comments from "./Comments";
-import Favorites from "./Favorites";
+import Favorites from "../../components/Favorites";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
+import useFetchRecipe from "../../hooks/useFetchRecipe";
+import useFetchUserProfile from "../../hooks/useFetchUserProfile";
 
 const RecipeDetails = () => {
   const { _id } = useParams();
 
   const { loggedInUser } = useContext(LoggedInUserContext);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["recipes"],
-    queryFn: () => fetch(`/api/recipes/${_id}`).then((res) => res.json()),
-  });
+  const { recipe, isPending } = useFetchRecipe(_id);
+  const { user, isLoading } = useFetchUserProfile(recipe?.userOwnerId);
 
-  if (isLoading) return null;
+  const [owner, setOwner] = useState(null);
+  console.log(user);
+  useEffect(() => {
+    setOwner(user?.name);
+  }, [user, isLoading]);
+
+  if (isPending) return null;
 
   return (
     <RecipeArticle>
-      {data.recipe ? (
+      {recipe ? (
         <RecipeSection>
           <Title>
             <div>
-              <h1>{data.recipe.title}</h1>
-              <p>{data.recipe.subtitle}</p>
+              <h1>{recipe.title}</h1>
+              {owner ? <p>By {owner}</p> : null}
+              <p>{recipe.subtitle}</p>
             </div>
             {loggedInUser && (
-              <Favorites recipe={data.recipe} userId={loggedInUser._id} />
+              <Favorites recipe={recipe} userId={loggedInUser._id} />
             )}
           </Title>
           <ImgIngredients>
-            <img src={data.recipe.imageURL} alt={data.recipe.title} />
+            <img src={recipe.imageURL} alt={recipe.title} />
             <ul>
               <h2>What you need.</h2>
-              {data.recipe.ingredients.map((ingredient) => (
+              {recipe.ingredients.map((ingredient) => (
                 <li key={ingredient}>{ingredient}</li>
               ))}
             </ul>
           </ImgIngredients>
+          <Instructions>
+            <h2>How to make it.</h2>
+            {recipe.instructions.map((step, idx) => (
+              <li key={idx}>
+                <p>
+                  {idx + 1}. {step}
+                </p>
+                <br />
+              </li>
+            ))}
+          </Instructions>
         </RecipeSection>
       ) : (
         <h1>Loading...</h1>
       )}
-      {data.recipe && <Comments recipe={data.recipe} />}
+      {recipe && <Comments recipe={recipe} />}
     </RecipeArticle>
   );
 };
@@ -52,22 +69,30 @@ const RecipeDetails = () => {
 export default RecipeDetails;
 
 const RecipeArticle = styled.article`
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10vw;
+  margin-inline: 10vw;
 `;
 
 const Title = styled.div`
   display: flex;
-  gap: 5rem;
+  flex-direction: column;
+  align-items: start;
+  font-size: 1rem;
+
+  h1 {
+    font-size: 4rem;
+    font-family: "Arizonia", cursive;
+  }
 `;
 
 const ImgIngredients = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: center;
-  align-items: center;
+  max-height: 500px;
   gap: 2rem;
 
   ul {
@@ -76,6 +101,7 @@ const ImgIngredients = styled.div`
     line-height: 1.8rem;
   }
   img {
+    height: 100%;
     width: 100%;
     border-radius: 10px;
     box-shadow: var(--primary-shadow);
@@ -88,4 +114,7 @@ const RecipeSection = styled.section`
   gap: 1rem;
   width: 100%;
   margin: 10vw;
+`;
+const Instructions = styled.ul`
+  list-style-type: none;
 `;
