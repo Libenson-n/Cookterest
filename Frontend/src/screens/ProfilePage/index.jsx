@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import useFetchUserProfile from "../../hooks/useFetchUserProfile";
+import useFetchUser from "../../hooks/useFetchUser";
 import FavoriteSection from "./FavoriteSection";
 import CreatedRecipes from "./CreatedRecipes";
 
@@ -13,10 +13,10 @@ const ProfilePage = () => {
 
   const [isOwner, setIsOwner] = useState(null);
 
-  const { user, isPending } = useFetchUserProfile(_id);
+  const { user, isPending } = useFetchUser(_id);
 
-  const [expandSaved, setExpandSaved] = useState(false);
-  const [expandCreated, setExpandCreated] = useState(true);
+  const [expandSaved, setExpandSaved] = useState(true);
+  const [expandCreated, setExpandCreated] = useState(false);
 
   const handleExpand = (event) => {
     if (event.target.name === "saved") {
@@ -50,6 +50,7 @@ const ProfilePage = () => {
           <AccordionBtn
             type="button"
             name="saved"
+            className={expandSaved ? "selected" : ""}
             onClick={(event) => handleExpand(event)}
           >
             Saved Recipes
@@ -57,6 +58,7 @@ const ProfilePage = () => {
           <AccordionBtn
             type="button"
             name="created"
+            className={expandCreated ? "selected" : ""}
             onClick={(event) => handleExpand(event)}
           >
             Your Recipes
@@ -114,6 +116,9 @@ const ProfileMain = styled.main`
   &:focus,
   &:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+  .selected {
+    border-bottom: solid 0.3rem blueviolet;
   }
 `;
 

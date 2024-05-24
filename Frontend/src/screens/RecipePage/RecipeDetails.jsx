@@ -1,11 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Comments from "./Comments";
 import Favorites from "../../components/Favorites";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
 import useFetchRecipe from "../../hooks/useFetchRecipe";
-import useFetchUserProfile from "../../hooks/useFetchUserProfile";
+import useFetchComments from "../../hooks/useFetchComments";
+import useCalculateRating from "../../hooks/useCalculateRating";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const RecipeDetails = () => {
   const { _id } = useParams();
@@ -13,15 +16,11 @@ const RecipeDetails = () => {
   const { loggedInUser } = useContext(LoggedInUserContext);
 
   const { recipe, isPending } = useFetchRecipe(_id);
-  const { user, isLoading } = useFetchUserProfile(recipe?.userOwnerId);
+  const { comments } = useFetchComments(_id);
+  const { rating } = useCalculateRating(recipe);
 
-  const [owner, setOwner] = useState(null);
-  console.log(user);
-  useEffect(() => {
-    setOwner(user?.name);
-  }, [user, isLoading]);
-
-  if (isPending) return null;
+  console.log(rating);
+  if (isPending) return <h1> Loading...</h1>;
 
   return (
     <RecipeArticle>
@@ -30,7 +29,12 @@ const RecipeDetails = () => {
           <Title>
             <div>
               <h1>{recipe.title}</h1>
-              {owner ? <p>By {owner}</p> : null}
+              <Rating>
+                {rating &&
+                  [...Array(rating)].map((star, index) => (
+                    <FontAwesomeIcon icon={faStar} key={index} />
+                  ))}
+              </Rating>
               <p>{recipe.subtitle}</p>
             </div>
             {loggedInUser && (
@@ -61,7 +65,7 @@ const RecipeDetails = () => {
       ) : (
         <h1>Loading...</h1>
       )}
-      {recipe && <Comments recipe={recipe} />}
+      {recipe && <Comments recipe={recipe} comments={comments} />}
     </RecipeArticle>
   );
 };
@@ -117,4 +121,9 @@ const RecipeSection = styled.section`
 `;
 const Instructions = styled.ul`
   list-style-type: none;
+`;
+const Rating = styled.div`
+  display: flex;
+  font-size: 1.2rem;
+  color: gold;
 `;

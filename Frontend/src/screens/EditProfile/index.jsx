@@ -2,12 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import useFetchUserProfile from "../../hooks/useFetchUserProfile";
+import useFetchUser from "../../hooks/useFetchUser";
 
 const EditProfile = () => {
   const { loggedInUser, logOut } = useContext(LoggedInUserContext);
 
-  const { user, isPending } = useFetchUserProfile(loggedInUser?._id);
+  const { user, isPending } = useFetchUser(loggedInUser?._id);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

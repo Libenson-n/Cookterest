@@ -1,20 +1,21 @@
 import styled from "styled-components";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
-import useFetchComments from "../../hooks/useFetchComments";
+import StarRating from "./StarRating";
 
-const Comments = ({ recipe }) => {
+const Comments = ({ recipe, comments }) => {
   const [comment, setComment] = useState("");
+
+  const queryClient = useQueryClient();
 
   const { loggedInUser } = useContext(LoggedInUserContext);
 
   const userName = loggedInUser?.name;
   const userId = loggedInUser?._id;
-  const recipeName = recipe?.title;
-  const recipeId = recipe?._id;
-  const timestamp = new Date().toLocaleDateString();
-
-  const { comments, isPending } = useFetchComments(recipeId);
+  const recipeName = recipe.title;
+  const recipeId = recipe._id;
+  const timestamp = new Date().toLocaleString();
 
   const handleCommentInput = (event) => {
     setComment(event.target.value);
@@ -37,19 +38,32 @@ const Comments = ({ recipe }) => {
     });
   };
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: addComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+      setComment("");
+    },
+  });
+
   const onSubmit = (event) => {
     event.preventDefault();
-    addComment();
-    setComment("");
+    mutateAsync();
   };
 
   return (
     <section>
       <ReviewForm onSubmit={onSubmit}>
+        <div> </div>
         <label htmlFor="feedback-user-review">
-          {loggedInUser
-            ? "Share your thoughts."
-            : "Sign up to leave a comment."}
+          {loggedInUser ? (
+            <div>
+              <h2>Rate this recipe.</h2>
+              <StarRating recipeId={recipeId} />
+            </div>
+          ) : (
+            <h2>Sign in to leave a comment.</h2>
+          )}
         </label>
         <TextInput
           id="feedback-user-review"
@@ -57,10 +71,14 @@ const Comments = ({ recipe }) => {
           rows={4}
           value={comment}
           disabled={loggedInUser ? false : true}
-          placeholder={loggedInUser ? "What did you think of this recipe?" : "" }
+          placeholder={loggedInUser ? "What did you think of this recipe?" : ""}
           onChange={handleCommentInput}
         ></TextInput>
-        {loggedInUser ? <button type="submit">Submit</button> : null}
+        {loggedInUser ? (
+          <button type="submit" disabled={isPending ? true : false}>
+            {isPending ? "Submitting" : "Submit"}
+          </button>
+        ) : null}
       </ReviewForm>
       <CommentsSection>
         <h2>Comments</h2>
@@ -71,13 +89,11 @@ const Comments = ({ recipe }) => {
             ) : null}
           </>
         )}
-        {!isPending &&
+        {comments &&
           comments?.map((comment, index) => (
             <Comment key={index}>
               <User>
-                <h3>
-                  {comment.userName}
-                </h3>
+                <h3>{comment.userName}</h3>
                 <p>{comment.timestamp}</p>
               </User>
               <p>{comment.comment}</p>
@@ -101,7 +117,7 @@ const ReviewForm = styled.form`
   width: fit-content;
   padding: 20px;
 
-  button { 
+  button {
     margin-inline: auto;
   }
 `;

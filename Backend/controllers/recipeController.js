@@ -122,4 +122,32 @@ const addRecipe = async (req, res) => {
   }
 };
 
-export { getRecipes, getRecipe, getRecipeByUser, addRecipe };
+const updateRating = async (req, res) => {
+  const { _id } = req.params;
+  const query = { _id };
+  const { rating } = req.body;
+  console.log(rating);
+  try {
+    const recipe = await db.collection(RECIPES_COLLECTION).findOne({ _id });
+    if (!recipe) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Error recipe not found!" });
+    } else {
+      await db
+        .collection(RECIPES_COLLECTION)
+        .updateOne(query, { $push: { rating: rating } });
+      return res.status(200).json({
+        status: 200,
+        message: "Rating successfully updated!",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: error.message,
+    });
+  }
+};
+
+export { getRecipes, getRecipe, getRecipeByUser, addRecipe, updateRating };

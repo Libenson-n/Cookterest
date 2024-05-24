@@ -7,7 +7,6 @@ const CreatedRecipes = ({ _id }) => {
 
   if (isPending) return <p>Loading...</p>;
 
-  console.log(userRecipes);
   return (
     <CreatedRecipesWrapper>
       {userRecipes

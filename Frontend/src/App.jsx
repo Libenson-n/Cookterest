@@ -9,12 +9,14 @@ import EditProfile from "./screens/EditProfile"
 import RecipeDetails from "./screens/RecipePage/RecipeDetails"
 import Footer from "./components/Footer"
 import GlobalStyles from "./GlobalStyles"
+import ScrollToTop from "./components/ScrollToTop"
 
 
 const App = () => {
  return (
   <Router>
     <GlobalStyles />
+    <ScrollToTop />
     <Header />
     <Routes>
       <Route path="/" element={<HomePage />} />

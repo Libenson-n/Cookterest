@@ -6,8 +6,9 @@ const useFetchRecipe = (_id) => {
     queryFn: () => fetch(`/api/recipes/${_id}`).then((res) => res.json()),
   });
   const recipe = data?.recipe;
+  const rating = data?.recipe.rating;
 
-  return { recipe, isPending };
+  return { recipe, rating, isPending };
 };
 
 export default useFetchRecipe;
