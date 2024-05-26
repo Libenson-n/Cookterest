@@ -4,7 +4,7 @@ import bghero from "../../images/bghero.avif";
 const Hero = () => {
   return (
     <HeroSection>
-      <h1>Cookstagram</h1>
+      <h1>Cookterest</h1>
     </HeroSection>
   );
 };
@@ -12,7 +12,7 @@ const Hero = () => {
 export default Hero;
 
 const HeroSection = styled.div`
-  height: 60vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;

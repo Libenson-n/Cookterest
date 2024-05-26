@@ -122,6 +122,9 @@ const addRecipe = async (req, res) => {
   }
 };
 
+//  @desc       Add a rating
+//  @route      PATCH /api/recipes
+//  @access     Private
 const updateRating = async (req, res) => {
   const { _id } = req.params;
   const query = { _id };
@@ -150,4 +153,35 @@ const updateRating = async (req, res) => {
   }
 };
 
-export { getRecipes, getRecipe, getRecipeByUser, addRecipe, updateRating };
+//  @desc       Get recipes by tags
+//  @route      GET /api/recipes/tags/:tag
+//  @access     Public
+const getRecipeByTag = async (req, res) => {
+  const { tag } = req.params;
+  try {
+    const recipes = await db.collection(RECIPES_COLLECTION).find().toArray();
+
+    if (!recipes) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Recipe not found!" });
+    }
+    const recipeByTag = recipes.filter((recipe) => recipe.tags.includes(tag));
+    res.status(200).json({ status: 200, recipeByTag });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: error.message,
+    });
+  }
+};
+
+export {
+  getRecipes,
+  getRecipe,
+  getRecipeByUser,
+  addRecipe,
+  updateRating,
+  getRecipeByTag,
+};

@@ -77,7 +77,7 @@ export default ProfilePage;
 
 const ProfileMain = styled.main`
   height: 100vh;
-  margin-inline: 20vw;
+  margin-inline: 10vw;
   display: flex;
   flex-direction: column;
 
@@ -94,6 +94,7 @@ const ProfileMain = styled.main`
       width: 60px;
       height: 60px;
       border-radius: 0;
+      box-shadow: var(--primary-sadow);
     }
   }
 
@@ -119,7 +120,11 @@ const ProfileMain = styled.main`
   }
   .selected {
     border-bottom: solid 0.3rem blueviolet;
+    border-right: solid 0.3rem blueviolet;
+
   }
+
+  
 `;
 
 const Name = styled.div`
@@ -146,6 +151,6 @@ const Accordion = styled.section`
 const AccordionBtn = styled.button`
   background-color: inherit;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
 `;

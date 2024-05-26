@@ -11,7 +11,6 @@ const EditProfile = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [bio, setBio] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [del, setDel] = useState();
 
@@ -22,7 +21,6 @@ const EditProfile = () => {
   useEffect(() => {
     setName(user?.name);
     setEmail(user?.email);
-    setBio(user?.bio);
     setProfilePic(user?.profilePic);
   }, []);
 
@@ -49,7 +47,6 @@ const EditProfile = () => {
           name,
           email,
           profilePic,
-          bio,
         }),
       })
         .then((res) => res.json())
@@ -67,7 +64,7 @@ const EditProfile = () => {
 
   return (
     <ProfileMain>
-      <h1>Edit Profile</h1>
+      <h2>Edit Profile</h2>
       <EditForm onSubmit={handleOnSubmit}>
         <label htmlFor="username">Username:</label>
         <input
@@ -96,18 +93,8 @@ const EditProfile = () => {
           onChange={(event) => setEmail(event.target.value)}
           required
         />
-        <label htmlFor="bio">Bio:</label>
-        <textarea
-          type="text"
-          name="bio"
-          rows={6}
-          cols={30}
-          placeholder="Enter bio"
-          value={bio}
-          onChange={(event) => setBio(event.target.value)}
-          required
-        />
         <button type="submit">Update</button>
+        <button type="button" onClick={()=>navigate(`/profile/${_id}`)}>Cancel</button>
       </EditForm>
       <DeleteBtn>
         <button className="delete" onClick={() => setDel(true)}>
@@ -136,7 +123,6 @@ const EditProfile = () => {
 export default EditProfile;
 
 const ProfileMain = styled.main`
-  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

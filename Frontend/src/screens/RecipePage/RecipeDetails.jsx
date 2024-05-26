@@ -19,7 +19,6 @@ const RecipeDetails = () => {
   const { comments } = useFetchComments(_id);
   const { rating } = useCalculateRating(recipe);
 
-  console.log(rating);
   if (isPending) return <h1> Loading...</h1>;
 
   return (

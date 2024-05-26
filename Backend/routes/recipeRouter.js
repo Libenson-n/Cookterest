@@ -6,6 +6,7 @@ import {
   addRecipe,
   getRecipeByUser,
   updateRating,
+  getRecipeByTag,
 } from "../controllers/recipeController.js";
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const router = express.Router();
 router.route("/").get(getRecipes).post(protect, addRecipe);
 
 router.get("/:_id", getRecipe);
-
+router.get("/tags/:tag", getRecipeByTag);
 router.get("/user/:_id", getRecipeByUser);
 
 router.patch("/rating/:_id", updateRating);

@@ -230,6 +230,10 @@ const FormInput = styled.input`
 const TagGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+
+  @media (max-width: 630px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const Tags = styled.div`
@@ -238,6 +242,10 @@ const Tags = styled.div`
   justify-content: space-between;
   border: solid 0.5px rgba(0, 0, 0, 0.1);
   padding-inline: 0.5rem;
+
+  @media (max-width: 630px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const IngredientInput = styled.div`

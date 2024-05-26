@@ -22,4 +22,10 @@ const RecipeGrid = styled.section`
   gap: 1rem;
   margin-inline: 10vw;
   margin-bottom: 60px;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+  
+  
 `;

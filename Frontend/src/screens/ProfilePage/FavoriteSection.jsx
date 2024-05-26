@@ -35,6 +35,7 @@ export default FavoriteSection;
 const FaveWrapper = styled.ul`
   display: grid;
   grid-template-columns: auto auto auto;
+  align-items: end;
 `;
 const FaveRecipes = styled.li`
   display: flex;

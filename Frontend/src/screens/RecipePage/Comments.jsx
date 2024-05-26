@@ -67,7 +67,6 @@ const Comments = ({ recipe, comments }) => {
         </label>
         <TextInput
           id="feedback-user-review"
-          cols={65}
           rows={4}
           value={comment}
           disabled={loggedInUser ? false : true}
@@ -107,6 +106,7 @@ const Comments = ({ recipe, comments }) => {
 export default Comments;
 
 const ReviewForm = styled.form`
+  min-width: 80vw;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -125,10 +125,12 @@ const TextInput = styled.textarea`
   resize: none;
   border-radius: 8px;
   padding: 10px;
+  min-width: 100%;
 `;
 
 const CommentsSection = styled.section`
   margin-block: 50px;
+  margin-inline: 10px;
 
   h2 {
     border-bottom: inset 2px rgba(0, 0, 0, 0.3);

@@ -12,7 +12,7 @@ const RecipeCard = ({ recipe }) => {
   return (
     <Container>
       <Image>
-        <img src={recipe.imageURL} />
+      <Link to={`/recipe/${recipe._id}`}><img src={recipe.imageURL} /></Link>
       </Image>
       <Title>
         <Link to={`/recipe/${recipe._id}`} className="recipeName">
