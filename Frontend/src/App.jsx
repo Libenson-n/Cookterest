@@ -10,6 +10,8 @@ import RecipeDetails from "./screens/RecipePage/RecipeDetails"
 import Footer from "./components/Footer"
 import GlobalStyles from "./GlobalStyles"
 import ScrollToTop from "./components/ScrollToTop"
+import MissingRoute from "./screens/MissingRoute"
+import RecipeByTagPage from "./screens/RecipeByTagPage"
 
 
 const App = () => {
@@ -25,7 +27,9 @@ const App = () => {
       <Route path="/profile/:_id" element={<ProfilePage />} />
       <Route path="/profile/edit/:_id" element={<EditProfile />} />
       <Route path="/recipe/:_id" element={<RecipeDetails />} />
+      <Route path="/recipes/:query" element={<RecipeByTagPage />} />
       <Route path="/recipe/create" element={<CreateRecipePage />} />
+      <Route path="*" element={<MissingRoute />} />
     </Routes>
     <Footer />
   </Router>

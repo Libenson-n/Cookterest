@@ -62,6 +62,7 @@ const LogInPage = () => {
         <input
           type="email"
           name="email"
+          id="email"
           placeholder="Enter email"
           onChange={(event) => handleInput(event)}
           required
@@ -70,6 +71,7 @@ const LogInPage = () => {
         <input
           type="password"
           name="password"
+          id="password"
           placeholder="Enter password"
           onChange={(event) => handleInput(event)}
           required

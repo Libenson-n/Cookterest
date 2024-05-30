@@ -9,6 +9,7 @@ import useFetchComments from "../../hooks/useFetchComments";
 import useCalculateRating from "../../hooks/useCalculateRating";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const RecipeDetails = () => {
   const { _id } = useParams();
@@ -19,7 +20,7 @@ const RecipeDetails = () => {
   const { comments } = useFetchComments(_id);
   const { rating } = useCalculateRating(recipe);
 
-  if (isPending) return <h1> Loading...</h1>;
+  if (isPending) return <ClipLoader />;
 
   return (
     <RecipeArticle>
@@ -30,7 +31,7 @@ const RecipeDetails = () => {
               <h1>{recipe.title}</h1>
               <Rating>
                 {rating &&
-                  [...Array(rating)].map((star, index) => (
+                  [...Array(rating)].map((_, index) => (
                     <FontAwesomeIcon icon={faStar} key={index} />
                   ))}
               </Rating>
@@ -95,8 +96,12 @@ const ImgIngredients = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: center;
-  max-height: 500px;
+  max-height: fit-content;
   gap: 2rem;
+
+  @media (max-width: 650px) {
+    grid-template-columns: 1fr;
+  }
 
   ul {
     margin-top: 1rem;
@@ -119,6 +124,7 @@ const RecipeSection = styled.section`
   margin: 10vw;
 `;
 const Instructions = styled.ul`
+  margin-top: 1rem;
   list-style-type: none;
 `;
 const Rating = styled.div`

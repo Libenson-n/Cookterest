@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
 import styled from "styled-components";
 import tags from "../../utils/tags.js";
+import { useNavigate } from "react-router-dom";
 
 const CreateRecipePage = () => {
   const [recipe, setRecipe] = useState({
@@ -19,6 +20,8 @@ const CreateRecipePage = () => {
   const { loggedInUser, logOut } = useContext(LoggedInUserContext);
 
   const userOwnerId = loggedInUser?._id;
+
+  const navigate = useNavigate();
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -51,7 +54,7 @@ const CreateRecipePage = () => {
   const removeInput = (event, index) => {
     if (event.target.name === "ingredients") {
       recipe.ingredients.splice(index, 1);
-      setRecipe({ ...recipe })
+      setRecipe({ ...recipe });
     } else if (event.target.name === "instructions") {
       recipe.instructions.splice(index, 1);
       setRecipe({ ...recipe });
@@ -61,7 +64,12 @@ const CreateRecipePage = () => {
     setRecipe({ ...recipe, instructions: [...recipe.instructions, ""] });
   };
 
+  const navigateAway = () => {
+    navigate("/");
+  };
+
   const addRecipe = async () => {
+    setPending(true);
     const { title, subtitle, tags, ingredients, instructions, imageURL } =
       recipe;
     try {
@@ -88,6 +96,7 @@ const CreateRecipePage = () => {
       }
       if (response.ok) {
         setSuccess(true);
+        setTimeout(navigateAway, 2000);
       }
     } catch (error) {
       console.error(error);
@@ -103,92 +112,107 @@ const CreateRecipePage = () => {
     <CreateRecipeMain>
       <>
         {authorized ? (
-          <RecipeForm onSubmit={onSubmit}>
-            <label htmlFor="title">Name of your recipe</label>
-            <FormInput
-              id="title"
-              name="title"
-              onChange={(event) => handleInput(event)}
-            />
-            <label htmlFor="subtitle">Description</label>
-            <FormInput
-              id="subtitle"
-              name="subtitle"
-              onChange={(event) => handleInput(event)}
-            />
-            <label htmlFor="ingredients">Ingredients</label>
-            {recipe.ingredients.map((ingredient, index) => (
-              <IngredientInput key={`ingredient-${index}`}>
+          <>
+            {!success ? (
+              <RecipeForm onSubmit={onSubmit}>
+                <label htmlFor="title">Name of your recipe</label>
                 <FormInput
-                  id="ingredients"
-                  name="ingredients"
-                  value={ingredient}
-                  onChange={(event) => handleIngredientsInput(event, index)}
+                  id="title"
+                  name="title"
+                  onChange={(event) => handleInput(event)}
                 />
+                <label htmlFor="subtitle">Description</label>
+                <FormInput
+                  id="subtitle"
+                  name="subtitle"
+                  onChange={(event) => handleInput(event)}
+                />
+                <label htmlFor="ingredients">Ingredients</label>
+                {recipe.ingredients.map((ingredient, index) => (
+                  <IngredientInput key={`ingredient-${index}`}>
+                    <FormInput
+                      id="ingredients"
+                      name="ingredients"
+                      value={ingredient}
+                      onChange={(event) => handleIngredientsInput(event, index)}
+                    />
+                    <button
+                      type="button"
+                      name="ingredients"
+                      onClick={(event) => removeInput(event, index)}
+                    >
+                      {" "}
+                      X{" "}
+                    </button>
+                  </IngredientInput>
+                ))}
                 <button
                   type="button"
-                  name="ingredients"
-                  onClick={(event) => removeInput(event, index)}
+                  onClick={(event) => addIngredientsInput(event)}
                 >
-                  {" "}
-                  X{" "}
+                  add ingredient
                 </button>
-              </IngredientInput>
-            ))}
-            <button
-              type="button"
-              onClick={(event) => addIngredientsInput(event)}
-            >
-              add ingredient
-            </button>
-            <label htmlFor="instructions">Step-By-Step Instructions</label>
+                <label htmlFor="instructions">Step-By-Step Instructions</label>
 
-            {recipe.instructions.map((instruction, index) => (
-              <InstructionInput key={`instruction-${index}`}>
-                <FormInput
-                  key={index}
-                  id="instructions"
-                  name="instructions"
-                  placeholder={`Step ${index + 1}`}
-                  value={instruction}
-                  onChange={(event) => handleInstructionsInput(event, index)}
-                />
+                {recipe.instructions.map((instruction, index) => (
+                  <InstructionInput key={`instruction-${index}`}>
+                    <FormInput
+                      key={index}
+                      id="instructions"
+                      name="instructions"
+                      placeholder={`Step ${index + 1}`}
+                      value={instruction}
+                      onChange={(event) =>
+                        handleInstructionsInput(event, index)
+                      }
+                    />
+                    <button
+                      type="button"
+                      name="instructions"
+                      onClick={(event) => removeInput(event, index)}
+                    >
+                      {" "}
+                      X{" "}
+                    </button>
+                  </InstructionInput>
+                ))}
                 <button
                   type="button"
-                  name="instructions"
-                  onClick={(event) => removeInput(event, index)}
+                  onClick={(event) => addInstructions(event)}
                 >
-                  {" "}
-                  X{" "}
+                  add instructions
                 </button>
-              </InstructionInput>
-            ))}
-            <button type="button" onClick={(event) => addInstructions(event)}>
-              add instructions
-            </button>
-            <label htmlFor="image">Image Url</label>
-            <FormInput
-              id="image"
-              name="imageURL"
-              onChange={(event) => handleInput(event)}
-            />
-            <label htmlFor="tags">Tags</label>
-            <TagGrid>
-              {tags.map((tag) => (
-                <Tags key={tag}>
-                  <label>{tag}</label>
-                  <input
-                    type="checkbox"
-                    value={tag}
-                    onChange={(event) => handleCheckbox(event)}
-                  />
-                </Tags>
-              ))}
-            </TagGrid>
-            <button type="submit" className="submit">
-              Submit
-            </button>
-          </RecipeForm>
+                <label htmlFor="image">Image Url</label>
+                <FormInput
+                  id="image"
+                  name="imageURL"
+                  onChange={(event) => handleInput(event)}
+                />
+                <label htmlFor="tags">Tags</label>
+                <TagGrid>
+                  {tags.map((tag) => (
+                    <Tags key={tag}>
+                      <label>{tag}</label>
+                      <input
+                        type="checkbox"
+                        value={tag}
+                        onChange={(event) => handleCheckbox(event)}
+                      />
+                    </Tags>
+                  ))}
+                </TagGrid>
+                <button
+                  type="submit"
+                  className="submit"
+                  disabled={pending ? true : false}
+                >
+                  Submit
+                </button>
+              </RecipeForm>
+            ) : (
+              <h2>Thank you!</h2>
+            )}
+          </>
         ) : (
           <h1>Please sign in to add your recipe</h1>
         )}
@@ -200,6 +224,7 @@ const CreateRecipePage = () => {
 export default CreateRecipePage;
 
 const CreateRecipeMain = styled.main`
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

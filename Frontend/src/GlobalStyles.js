@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
     :root {
         background-color: rgba(255, 255, 255, 1);
-        --accent-color: rgba(255, 230, 154);
+        --accent-color: lightcoral;
         --button-color: rgb(146, 180, 236);
         --primary-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         --primary-border: rgba(0, 0, 0, 0.1);

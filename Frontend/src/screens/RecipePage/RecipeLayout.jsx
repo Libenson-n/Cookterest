@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import RecipeCard from "./RecipeCard";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const RecipeLayout = ({ recipes }) => {
-  if (!recipes) return <p>Loadin...</p>;
+  if (!recipes) return <ClipLoader />;
 
   return (
     <RecipeGrid>
@@ -26,6 +27,4 @@ const RecipeGrid = styled.section`
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
-  
-  
 `;

@@ -34,7 +34,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <main>
+    <SignUpMain>
       {!success ? (
         <RegisterForm onSubmit={onSubmit}>
           <h2>Sign Up</h2>
@@ -75,11 +75,16 @@ const RegisterPage = () => {
           <Link to={"/login"}>sign in</Link>
         </p>
       )}
-    </main>
+    </SignUpMain>
   );
 };
 
 export default RegisterPage;
+
+const SignUpMain = styled.main`
+  min-height: auto;
+
+`
 
 const RegisterForm = styled.form`
   width: fit-content;

@@ -6,7 +6,6 @@ import styled from "styled-components";
 const StarRating = ({ recipeId }) => {
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
-  const [rated, setRated] = useState(false);
 
   const handleRating = (event) => {
     setRating(event.target.value);

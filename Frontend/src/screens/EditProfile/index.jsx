@@ -7,7 +7,7 @@ import useFetchUser from "../../hooks/useFetchUser";
 const EditProfile = () => {
   const { loggedInUser, logOut } = useContext(LoggedInUserContext);
 
-  const { user, isPending } = useFetchUser(loggedInUser?._id);
+  const { user } = useFetchUser(loggedInUser?._id);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -90,7 +90,7 @@ const EditProfile = () => {
           name="profilePic"
           placeholder="Enter Image Url"
           value={profilePic}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => setProfilePic(event.target.value)}
           required
         />
         <button type="submit">Update</button>

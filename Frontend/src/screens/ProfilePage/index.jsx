@@ -5,6 +5,7 @@ import styled from "styled-components";
 import useFetchUser from "../../hooks/useFetchUser";
 import FavoriteSection from "./FavoriteSection";
 import CreatedRecipes from "./CreatedRecipes";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const ProfilePage = () => {
   const { _id } = useParams();
@@ -32,7 +33,7 @@ const ProfilePage = () => {
     loggedInUser && setIsOwner(loggedInUser._id === _id);
   }, []);
 
-  if (isPending) return <h1>Loading...</h1>;
+  if (isPending) return <ClipLoader />;
 
   return (
     <ProfileMain>
@@ -86,6 +87,7 @@ const ProfileMain = styled.main`
 
   img {
     width: 100px;
+    height: 100px;
     border-radius: 100px;
   }
   ul {
@@ -121,10 +123,7 @@ const ProfileMain = styled.main`
   .selected {
     border-bottom: solid 0.3rem blueviolet;
     border-right: solid 0.3rem blueviolet;
-
   }
-
-  
 `;
 
 const Name = styled.div`

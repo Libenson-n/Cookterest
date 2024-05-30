@@ -12,7 +12,7 @@ const Hero = () => {
 export default Hero;
 
 const HeroSection = styled.div`
-  height: 50vh;
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,24 +1,29 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import useFetchRecipesByUser from "../../hooks/useFetchRecipesByUser";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const CreatedRecipes = ({ _id }) => {
   const { userRecipes, isPending } = useFetchRecipesByUser(_id);
 
-  if (isPending) return <p>Loading...</p>;
-
+  if (isPending) return <ClipLoader />;
+  console.log(userRecipes);
   return (
     <CreatedRecipesWrapper>
-      {userRecipes
-        ? userRecipes?.map((recipe) => (
-            <Recipe key={recipe._id}>
-              <Link to={`/recipe/${recipe._id}`}>{recipe.title}</Link>
-              <Link to={`/recipe/${recipe._id}`}>
-                <img src={recipe.imageURL} />
-              </Link>
-            </Recipe>
-          ))
-        : null}
+      {userRecipes.length > 0 ? (
+        userRecipes?.map((recipe) => (
+          <Recipe key={recipe._id}>
+            <Link to={`/recipe/${recipe._id}`}>{recipe.title}</Link>
+            <Link to={`/recipe/${recipe._id}`}>
+              <img src={recipe.imageURL} />
+            </Link>
+          </Recipe>
+        ))
+      ) : (
+        <Link to={"/recipe/create"}>
+          <h3>Add your recipe</h3>
+        </Link>
+      )}
     </CreatedRecipesWrapper>
   );
 };

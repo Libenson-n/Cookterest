@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 import Favorites from "../../components/Favorites";
 import { LoggedInUserContext } from "../../contexts/LoggedInUserContext";
 import { useContext } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const RecipeCard = ({ recipe }) => {
-  if (!recipe) return <p>Loading...</p>;
+  if (!recipe) return <ClipLoader />;
 
   const { loggedInUser } = useContext(LoggedInUserContext);
 
   return (
     <Container>
       <Image>
-      <Link to={`/recipe/${recipe._id}`}><img src={recipe.imageURL} /></Link>
+        <Link to={`/recipe/${recipe._id}`}>
+          <img src={recipe.imageURL} />
+        </Link>
       </Image>
       <Title>
         <Link to={`/recipe/${recipe._id}`} className="recipeName">
@@ -24,7 +27,9 @@ const RecipeCard = ({ recipe }) => {
       </Title>
       <Tags>
         {recipe.tags.map((tag) => (
-          <Tag key={tag}>{tag}</Tag>
+          <Tag key={tag}>
+            <Link to={`/recipes/${tag}`}>{tag}</Link>
+          </Tag>
         ))}
       </Tags>
     </Container>
